@@ -5,9 +5,11 @@ class MessageList extends Component {
 
   render() {
     return(
-    <main className="messages">
-
-    </main>)
+    <div>
+      <main className="messages">
+        <Message />
+      </main>
+    </div>)
   }
 }
 
