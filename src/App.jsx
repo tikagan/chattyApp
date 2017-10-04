@@ -19,6 +19,11 @@ class App extends Component {
     this.socket.onopen = function (event) {
       console.log("connected to WebSocket Server")
     }
+    this.socket.onmessage = (e) => {
+      debugger
+      let newmsg = JSON.parse(e.data)
+      this.messageFromServer(newmsg)
+    }
   }
 
 
@@ -35,6 +40,14 @@ class App extends Component {
       </div>
 
     );
+  }
+
+  messageFromServer = (newmsg) => {
+    if (newmsg.username === this.state.currentUser.name) {
+      return
+    }
+    const messages = this.state.messages.concat(msg)
+    this.setState({messages: messages})
   }
 
   onMessageSend = (content) => {
