@@ -8,19 +8,8 @@ class App extends Component {
     super(props);
     //set up the default state for the application
     this.state = {
-      currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          id: 1,
-          username: 'Bob',
-          content: 'Has anyone seen my marbles?',
-        },
-        {
-          id: 2,
-          username: 'Anonymous',
-          content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-        }
-      ]
+      currentUser: {name: 'Anonymous'}, // optional. if currentUser is not defined, it means the user is Anonymous
+      messages: [ ]
     }
   }
 
@@ -37,6 +26,8 @@ class App extends Component {
     }, 3000);
   }
 
+
+
   render() {
     console.log('Rendering <App />')
     return (
@@ -45,11 +36,29 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages}/>
-        <ChatBar currentUser={this.state.currentUser}/>
+        <ChatBar currentUser={this.state.currentUser} onMessageSend={this.onMessageSend} onUsernameSend={this.onUsernameSend}/>
       </div>
 
     );
   }
+
+  onMessageSend = (content) => {
+    const newMessage = {
+      id: Date.now(),
+      username: this.state.currentUser.name,
+      content: content
+    }
+    const messages = this.state.messages.concat(newMessage)
+    this.setState({messages: messages})
+  }
+
+  onUsernameSend = (name) => {
+    const currentUser = {
+      name: name
+    }
+    this.setState({currentUser: currentUser})
+  }
+
 }
 
 export default App;
