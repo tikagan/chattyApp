@@ -25,7 +25,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("componentDidMount <App />");
+    console.log('componentDidMount <App />')
     setTimeout(() => {
       console.log("Simulating incoming message");
       // Add a new message to the list of messages in the data store
@@ -38,7 +38,7 @@ class App extends Component {
   }
 
   render() {
-    console.log("Rendering <App />");
+    console.log('Rendering <App />')
     return (
       <div>
         <nav className="navbar">
