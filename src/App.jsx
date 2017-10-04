@@ -38,6 +38,7 @@ class App extends Component {
   }
 
   render() {
+    console.log("Rendering <App />");
     return (
       <div>
         <nav className="navbar">
