@@ -20,7 +20,7 @@ class App extends Component {
       console.log("connected to WebSocket Server")
     }
     this.socket.onmessage = (e) => {
-      debugger
+      console.log('receiving message from server')
       let newmsg = JSON.parse(e.data)
       this.messageFromServer(newmsg)
     }
@@ -43,10 +43,10 @@ class App extends Component {
   }
 
   messageFromServer = (newmsg) => {
-    if (newmsg.username === this.state.currentUser.name) {
+    if (newmsg.username === this.state.currentUser.name && newmsg.username !== 'Anonymous') {
       return
     }
-    const messages = this.state.messages.concat(msg)
+    const messages = this.state.messages.concat(newmsg)
     this.setState({messages: messages})
   }
 
@@ -56,8 +56,10 @@ class App extends Component {
       username: this.state.currentUser.name,
       content: content
     }
-    const messages = this.state.messages.concat(newMessage)
-    this.setState({messages: messages})
+    if (newMessage.username !== 'Anonymous'){
+      const messages = this.state.messages.concat(newMessage)
+      this.setState({messages: messages})
+    }
     this.socket.send(JSON.stringify(newMessage))
   }
 
