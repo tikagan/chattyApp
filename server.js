@@ -18,6 +18,7 @@ new WebpackDevServer(webpack(config), {
     console.log('Running at http://0.0.0.0:3000');
   });
 
+
   // server.js
 
   const express = require('express');
@@ -41,6 +42,13 @@ new WebpackDevServer(webpack(config), {
   wss.on('connection', (ws) => {
     console.log('Client connected');
 
+    ws.on('message', (message) =>{
+      console.log('recieved message: ', message)
+      const msg = JSON.parse(message)
+      msg.type = 'message'
+      ws.send(JSON.stringify(msg))
+
+    })
     // Set up a callback for when a client closes the socket. This usually means they closed their browser.
     ws.on('close', () => console.log('Client disconnected'));
   });
