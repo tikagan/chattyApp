@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ChatBar from './Chatbar.jsx'
 import MessageList from './MessageList.jsx'
+import uuidv1 from
 
 class App extends Component {
   constructor(props) {
@@ -20,9 +21,20 @@ class App extends Component {
       console.log("connected to WebSocket Server")
     }
     this.socket.onmessage = (e) => {
-      console.log('receiving message from server')
-      let newmsg = JSON.parse(e.data)
-      this.messageFromServer(newmsg)
+      console.log('receiving data from server')
+      let fromSrvr = JSON.parse(e.data)
+      switch(fromSrvr) {
+        case 'incomingMessage':
+          console.log('receiving message from server')
+          this.messageFromServer(fromSrvr)
+          break
+        case 'incomingNotification':
+          console.log('receiving notification from server')
+          this.notificationFromServer()
+          break
+        default:
+          throw new Error("Unknown event type: " + data.type)
+      }
     }
   }
 
@@ -50,9 +62,16 @@ class App extends Component {
     this.setState({messages: messages})
   }
 
+  notificationFromServer = (newnotif) => {
+    debugger
+    this.setState({notifications: })
+
+  }
+
   onMessageSend = (content) => {
     const newMessage = {
       id: Date.now(),
+      type: 'postMessage',
       username: this.state.currentUser.name,
       content: content
     }
@@ -67,9 +86,13 @@ class App extends Component {
     const currentUser = {
       name: name
     }
+    const forServer = {
+      type: 'postNotification',
+      content: `${this.state.currentUser.name} has changed their name to ${currentUser.name}`
+    }
+    this.socket.send(JSON.stringify(forServer))
     this.setState({currentUser: currentUser})
   }
-
 }
 
 export default App;
