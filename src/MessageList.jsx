@@ -8,22 +8,24 @@ class MessageList extends Component {
   }
 
 
-  toRender (messages) {
-    return messages.map((data) => {
-     switch(data.type) {
-       case 'incomingMessage':
-         return (
-           <Message key={data.id} username={data.username} content={data.content}></Message>
-         )
-         break
-       case 'incomingNotification':
+toRender (messages) {
+  return messages.map((data) => {
+    switch(data.type) {
+      case 'incomingMessage':
+       return (
+         <Message key={data.id} username={data.username} content={data.content}></Message>
+       )
+      case 'incomingNotification':
         return (
           <Notification key={data.id} content={data.content}></Notification>
         )
-        break
-     }
-    })
-  }
+      case 'userJoinedNotification':
+      return (
+          <Notification key={data.id} content={data.content}></Notification>
+        )
+    }
+  })
+}
 
   render() {
     console.log('Rendering <MessageList />', this.props.messages)
