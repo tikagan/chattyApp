@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import ChatBar from './Chatbar.jsx'
 import MessageList from './MessageList.jsx'
-
+import UserCount from './UserCount.jsx'
 
 class App extends Component {
   constructor(props) {
@@ -11,6 +11,7 @@ class App extends Component {
     this.state = {
       currentUser: {name: 'Anonymous'}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [ ],
+      users: {}
     }
   }
 
@@ -30,6 +31,10 @@ class App extends Component {
         case 'incomingNotification':
           console.log('receiving notification from server')
           break
+        case 'userJoinedNotification':
+          debugger
+          console.log('receiving user notification from server')
+          break
         default:
           throw new Error("Unknown event type: " + data.type)
       }
@@ -43,6 +48,7 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <UserCount users={this.state.}></UserCount>
         </nav>
         <MessageList messages={this.state.messages}/>
         <ChatBar currentUser={this.state.currentUser} onMessageSend={this.onMessageSend} onUsernameSend={this.onUsernameSend}/>
@@ -51,9 +57,6 @@ class App extends Component {
   }
 
   dataFromServer = (data) => {
-    if (data.username === this.state.currentUser.name && data.username !== 'Anonymous') {
-      return
-    }
     const messages = this.state.messages.concat(data)
       this.setState({messages: messages})
   }
@@ -65,10 +68,6 @@ class App extends Component {
       username: this.state.currentUser.name,
       content: content
     }
-    if (newMessage.username !== 'Anonymous'){
-      const messages = this.state.messages.concat(newMessage)
-      this.setState({messages: messages})
-    }
     this.socket.send(JSON.stringify(newMessage))
   }
 
@@ -78,7 +77,7 @@ class App extends Component {
     }
     const forServer = {
       type: 'postNotification',
-      content: `{this.state.currentUser.name} has changed their name to ${currentUser.name}`
+      content: `**${this.state.currentUser.name}** has changed their name to **${currentUser.name}**`
     }
     this.socket.send(JSON.stringify(forServer))
     this.setState({currentUser: currentUser})
