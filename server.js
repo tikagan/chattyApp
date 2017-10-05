@@ -35,11 +35,24 @@ new WebpackDevServer(webpack(config), {
     .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${ PORT }`));
 
     //broadcast function
-
     const broadcast = (msg) => {
       wss.clients.forEach(function each(client) {
         client.send(JSON.stringify(msg))
       })
+    }
+
+    const userJoinedNotifications = (users) => {
+      users.id = uuidv1()
+      users.content = 'Anonymous has joined the chat.'
+      users.count ++
+      users.type = 'userJoinedNotification'
+      broadcast(users)
+    }
+
+    const userLeftNotifications = (users) => {
+      users.id = uuidv1()
+      type: 'userLeftNotification'
+      users.count --
     }
 
     // Create the WebSockets server
@@ -48,8 +61,13 @@ new WebpackDevServer(webpack(config), {
     // Set up a callback that will run when a client connects to the server
     // When a client connects they are assigned a socket, represented by
     // the ws parameter in the callback.
+    let users = {
+      count: 0
+    }
     wss.on('connection', (ws) => {
       console.log('Client connected');
+      userJoinedNotifications(users)
+      console.log("users: ", users)
 
       ws.on('message', (message) =>{
         const msg = JSON.parse(message)
@@ -69,5 +87,8 @@ new WebpackDevServer(webpack(config), {
         broadcast(msg)
       })
       // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-      ws.on('close', () => console.log('Client disconnected'));
+      ws.on('close', () => {
+        console.log('Client disconnected')
+        userLeftNotifications(users)
+    });
   });
