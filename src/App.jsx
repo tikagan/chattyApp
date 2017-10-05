@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import ChatBar from './Chatbar.jsx'
 import MessageList from './MessageList.jsx'
-import uuidv1 from
+
 
 class App extends Component {
   constructor(props) {
@@ -10,7 +10,7 @@ class App extends Component {
     //set up the default state for the application
     this.state = {
       currentUser: {name: 'Anonymous'}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [ ]
+      messages: [ ],
     }
   }
 
@@ -22,23 +22,22 @@ class App extends Component {
     }
     this.socket.onmessage = (e) => {
       console.log('receiving data from server')
-      let fromSrvr = JSON.parse(e.data)
-      switch(fromSrvr) {
+      let data = JSON.parse(e.data)
+      switch(data.type) {
         case 'incomingMessage':
           console.log('receiving message from server')
-          this.messageFromServer(fromSrvr)
+          this.dataFromServer(data)
           break
         case 'incomingNotification':
           console.log('receiving notification from server')
-          this.notificationFromServer()
+          this.dataFromServer(data)
           break
         default:
+        debugger
           throw new Error("Unknown event type: " + data.type)
       }
     }
   }
-
-
 
   render() {
     console.log('Rendering <App />')
@@ -50,22 +49,15 @@ class App extends Component {
         <MessageList messages={this.state.messages}/>
         <ChatBar currentUser={this.state.currentUser} onMessageSend={this.onMessageSend} onUsernameSend={this.onUsernameSend}/>
       </div>
-
     );
   }
 
-  messageFromServer = (newmsg) => {
-    if (newmsg.username === this.state.currentUser.name && newmsg.username !== 'Anonymous') {
+  dataFromServer = (data) => {
+    if (data.username === this.state.currentUser.name && data.username !== 'Anonymous') {
       return
     }
-    const messages = this.state.messages.concat(newmsg)
-    this.setState({messages: messages})
-  }
-
-  notificationFromServer = (newnotif) => {
-    debugger
-    this.setState({notifications: })
-
+    const messages = this.state.messages.concat(data)
+      this.setState({messages: messages})
   }
 
   onMessageSend = (content) => {
