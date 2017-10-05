@@ -52,20 +52,21 @@ new WebpackDevServer(webpack(config), {
       console.log('Client connected');
 
       ws.on('message', (message) =>{
-        console.log('recieved message: ', message)
         const msg = JSON.parse(message)
         msg.id = uuidv1()
         switch(msg.type) {
           case 'postMessage':
+            console.log('recieved message: ', msg)
             msg.type = 'incomingMessage'
             break
           case 'postNotification':
+            console.log('recieved notification: ', msg)
             msg.type = 'incomingNotification'
             break
           default:
             console.log(msg.type)
         }
-        broadcast(msg) 
+        broadcast(msg)
       })
       // Set up a callback for when a client closes the socket. This usually means they closed their browser.
       ws.on('close', () => console.log('Client disconnected'));
