@@ -26,16 +26,14 @@ class App extends Component {
       switch(data.type) {
         case 'incomingMessage':
           console.log('receiving message from server')
-          this.dataFromServer(data)
           break
         case 'incomingNotification':
           console.log('receiving notification from server')
-          this.dataFromServer(data)
           break
         default:
-        debugger
           throw new Error("Unknown event type: " + data.type)
       }
+      this.dataFromServer(data)
     }
   }
 
@@ -80,7 +78,7 @@ class App extends Component {
     }
     const forServer = {
       type: 'postNotification',
-      content: `${this.state.currentUser.name} has changed their name to ${currentUser.name}`
+      content: `{this.state.currentUser.name} has changed their name to ${currentUser.name}`
     }
     this.socket.send(JSON.stringify(forServer))
     this.setState({currentUser: currentUser})
