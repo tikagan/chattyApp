@@ -27,18 +27,19 @@ class App extends Component {
       switch(data.type) {
         case 'incomingMessage':
           console.log('receiving message from server')
+          this.dataFromServer(data)
           break
         case 'incomingNotification':
           console.log('receiving notification from server')
+          this.dataFromServer(data)
           break
         case 'userJoinedNotification':
-          debugger
-          console.log('receiving user notification from server')
+          console.log('receiving user joined notification from server')
+          this.userDataFromServer(data)
           break
         default:
           throw new Error("Unknown event type: " + data.type)
       }
-      this.dataFromServer(data)
     }
   }
 
@@ -48,7 +49,7 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
-          <UserCount users={this.state.}></UserCount>
+          <UserCount count={this.state.users.count}></UserCount>
         </nav>
         <MessageList messages={this.state.messages}/>
         <ChatBar currentUser={this.state.currentUser} onMessageSend={this.onMessageSend} onUsernameSend={this.onUsernameSend}/>
@@ -58,7 +59,12 @@ class App extends Component {
 
   dataFromServer = (data) => {
     const messages = this.state.messages.concat(data)
-      this.setState({messages: messages})
+      this.setState({messages: message})
+  }
+
+  userDataFromServer = (data) => {
+    const users = data
+    this.setState({users: users})
   }
 
   onMessageSend = (content) => {
