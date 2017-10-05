@@ -6,9 +6,11 @@ class UserCount extends Component {
   }
 
   render () {
-    console.log('Rendering <Message />')
+    console.log('Rendering <UserCount />')
     return (
-
+      <div className='userCount'>
+        <h3>{this.props.count} users online</h3>
+      </div>
       )
   }
 }
