@@ -7,7 +7,6 @@ class Notification extends Component {
 
   render () {
     console.log('Rendering <Notification />')
-
     return (
         <div className="message system">
           <span className='notification content'>{this.props.content}</span>

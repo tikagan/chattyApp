@@ -29,22 +29,17 @@ class App extends Component {
           setUserState(data.count)
           break
         case 'incomingMessage':
-          console.log('app receiving message from server')
           this.dataFromServer(data)
           break
         case 'incomingNotification':
-          console.log('app receiving notification from server')
           this.dataFromServer(data)
           break
         case 'userJoinedNotification':
-          console.log('app receiving user joined notification from server')
           this.setUserState(data.count)
           data.content = 'Anonymous joined the chat.'
           this.dataFromServer(data)
           break
         case 'userLeftNotification':
-        debugger
-          console.log('app receiving user left notification from server')
           this.setUserState(data.count)
           this.dataFromServer(data)
         //recieves the id of the user that left, can print which user left in the chat

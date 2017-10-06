@@ -13,28 +13,22 @@ toRender = (messages) => {
   return messages.map((data) => {
     switch(data.type) {
       case 'incomingMessage':
-      console.log('msgList incoming message')
        return (
          <Message key={data.id} username={data.username} content={data.content}></Message>
        )
       case 'incomingNotification':
-      console.log('msgList incoming notification')
         return (
           <Notification key={data.id} content={data.content}></Notification>
         )
       case 'userJoinedNotification':
-      console.log('msgList incoming user joined')
         return (
           <Notification key={data.id} content={data.content}></Notification>
         )
       case 'userLeftNotification':
-      console.log('msgList incoming user left')
-      debugger
         return (
           <UserLeftNotification key={data.id} username={data.username}></UserLeftNotification>
         )
     }
-
   })
 }
 
