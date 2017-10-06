@@ -10,8 +10,8 @@ class App extends Component {
     //set up the default state for the application
     this.state = {
       currentUser: {name: 'Anonymous'}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [ ],
-      users: {}
+      messages: [],
+      userCount: 0,
     }
   }
 
@@ -25,18 +25,29 @@ class App extends Component {
       console.log('receiving data from server')
       let data = JSON.parse(e.data)
       switch(data.type) {
+        case 'userCount':
+          setUserState(data.count)
+          break
         case 'incomingMessage':
-          console.log('receiving message from server')
+          console.log('app receiving message from server')
           this.dataFromServer(data)
           break
         case 'incomingNotification':
-          console.log('receiving notification from server')
+          console.log('app receiving notification from server')
           this.dataFromServer(data)
           break
         case 'userJoinedNotification':
-          console.log('receiving user joined notification from server')
-          this.userDataFromServer(data)
+          console.log('app receiving user joined notification from server')
+          this.setUserState(data.count)
+          data.content = 'Anonymous joined the chat.'
+          this.dataFromServer(data)
           break
+        case 'userLeftNotification':
+        debugger
+          console.log('app receiving user left notification from server')
+          this.setUserState(data.count)
+          this.dataFromServer(data)
+        //recieves the id of the user that left, can print which user left in the chat
         default:
           throw new Error("Unknown event type: " + data.type)
       }
@@ -49,7 +60,7 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
-          <UserCount count={this.state.users.count}></UserCount>
+          <UserCount count={this.state.userCount}></UserCount>
         </nav>
         <MessageList messages={this.state.messages}/>
         <ChatBar currentUser={this.state.currentUser} onMessageSend={this.onMessageSend} onUsernameSend={this.onUsernameSend}/>
@@ -59,12 +70,12 @@ class App extends Component {
 
   dataFromServer = (data) => {
     const messages = this.state.messages.concat(data)
-      this.setState({messages: message})
+      this.setState({messages: messages})
   }
 
-  userDataFromServer = (data) => {
-    const users = data
-    this.setState({users: users})
+  setUserState = (data) => {
+    const userCount = data
+    this.setState({userCount: userCount})
   }
 
   onMessageSend = (content) => {
